@@ -1,9 +1,10 @@
-import TanstackProvider from '@/components/query-provider/tanstackProvider'
-import './globals.css'
-import type { Metadata } from 'next'
-import { Inter } from 'next/font/google'
+import "./globals.css";
+import type { Metadata } from "next";
+import { Inter } from "next/font/google";
 
-const inter = Inter({ subsets: ['latin'] })
+import { ClientProvider } from "../state-managemnt/client";
+
+const inter = Inter({ subsets: ["latin"] });
 
 // export const metadata: Metadata = {
 //   title: 'Create Next App',
@@ -13,11 +14,13 @@ const inter = Inter({ subsets: ['latin'] })
 export default function RootLayout({
   children,
 }: {
-  children: React.ReactNode
+  children: React.ReactNode;
 }) {
   return (
     <html lang="en">
-      <body> <TanstackProvider> {children} </TanstackProvider></body>
+      <body>
+        <ClientProvider> {children} </ClientProvider>
+      </body>
     </html>
-  )
+  );
 }

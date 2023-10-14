@@ -1,5 +1,5 @@
-const { default: axios } = require("axios");
 const { handleResponse } = require("./handler");
+import axios from "axios";
 
 export async function getAddressesService() {
   try {
