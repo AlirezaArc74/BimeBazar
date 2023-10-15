@@ -8,7 +8,7 @@ export const getAddressesService = async () => {
 
   try {
     const response = await axios.get(
-      "https://front-end-task.bmbzr.ir/my-addresses/",
+      "https://front-end-task.bmbzr.ir/my-addresses/"
     );
     if (response.status === 200) {
       //@ts-ignore
@@ -18,11 +18,7 @@ export const getAddressesService = async () => {
 
       return response.data;
     }
-  } catch (e) {
-    return {
-      message: e,
-    };
-  }
+  } catch (e) {}
 };
 
 interface ChosenAddress {

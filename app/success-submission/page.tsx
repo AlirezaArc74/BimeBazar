@@ -13,7 +13,6 @@ const SuccessSubmission = () => {
     if (getCookie('status') !== "200" || !getCookie('status') ) {
       router.push('/submission')
     }
-
   },[])
 
   return (
@@ -28,8 +27,7 @@ const SuccessSubmission = () => {
         onClick={() => router.back()}
         className="fixed  bottom-0  bg-black text-white pointer m-10 py-2 px-[40px] "
       >
-        {" "}
-        بازگشت{" "}
+        بازگشت
       </button>
     </>
   );

@@ -16,15 +16,10 @@ import { ClientContext } from "@/state-managemnt/client";
 
 import { getAddressesService, sendClientData } from "@/app/api/service";
 
-import {  useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 
 import { deleteCookie, getCookie, setCookie } from "cookies-next";
-
-interface Addresses {
-  id: string;
-  name: string;
-  details: string;
-}
+import { notification } from "antd";
 
 interface ChosenAddress {
   nationalId: string;
@@ -36,14 +31,14 @@ const ClientsInfo = () => {
   const router = useRouter();
 
   const [nationalId, setNationalId] = useState("");
+
   const [phoneNumber, setPhoneNumber] = useState("");
+
+  const [openModal, setOpenModal] = useState(false);
 
   const { addressInfo } = useContext(ClientContext);
 
   // functions related to open and close modal
-  const [openModal, setOpenModal] = useState(false);
-
-
   const showAddressesModal = () => {
     setOpenModal(true);
     getAddresses();
@@ -99,11 +94,13 @@ const ClientsInfo = () => {
       setData(response);
       setIsLoading(false);
     } else {
+      notification.error({
+        description: "مشکلی پیش آمده لطفا مجددا تلاش کنید",
+        message: undefined,
+      });
     }
   }
   // handle fetch data for showing addresses in modal component
-
-  // const [addressCookie, setAddressCookie] = useState(false);
 
   // send chesen address data to back
   const handleFormSubmit = async () => {
@@ -118,24 +115,26 @@ const ClientsInfo = () => {
       router.push("/success-submission");
       setCookie("addresses", formData);
       setCookie("status", 200);
+    } else {
+      notification.error({
+        description: "مشکلی پیش آمده لطفا مجددا تلاش کنید",
+        message: undefined,
+      });
     }
   };
   // send chesen address data to back
 
-
   // add natational id and phone number when user register successfully and came back to first page
   useEffect(() => {
-    if (getCookie('status') === "200") {
+    if (getCookie("status") === "200") {
       const cookieValue: any = getCookie("addresses");
       const addressesObject = JSON?.parse(cookieValue);
       setNationalId(addressesObject.nationalId);
       setPhoneNumber(addressesObject.phoneNumber);
     }
-    return deleteCookie('status')
+    return deleteCookie("status");
   }, []);
   // add natational id and phone number when user register successfully and came back to first page
-
-  
 
   if (isLoading) return <div> ...در حال دریافت اطلاعات </div>;
   return (

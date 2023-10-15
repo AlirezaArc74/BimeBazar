@@ -30,7 +30,6 @@ const ModalAddresses: React.FC<ModalAddressesProps> = ({
   const {setAddressInfo} = useContext(ClientContext)
 
   const addressHandler = (address:Addresses) => {
-    
     setAddressId(address.id);
   };
 
@@ -43,8 +42,6 @@ const ModalAddresses: React.FC<ModalAddressesProps> = ({
   }
   // close modal and handle data function 
 
-
-
   
   return (
     <>
@@ -55,8 +52,6 @@ const ModalAddresses: React.FC<ModalAddressesProps> = ({
         footer={null}
         onCancel={closeAddressesModal}
       >
-        {/* {isLoading && <div> ...در حال دریافت اطلاعات </div>}
-        {isError && <div> مشکلی پیش امده لطفا مجدد تلاش کنید </div>} */}
         <div>
           <div className="flex justify-between flex-row-reverse mb-4 m-4 items-baseline ">
             <h1 className=" font-semibold mt-4 ">انتخاب آدرس</h1>
