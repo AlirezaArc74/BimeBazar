@@ -1,10 +1,9 @@
+
 import React, { useContext, useState } from "react";
 import { Checkbox, Input, Modal, notification } from "antd";
 import { CloseOutlined } from "@ant-design/icons";
-import axios from "axios";
-import { useMutation } from "@tanstack/react-query";
-import { ClientProvider } from "@/state-managemnt/client";
 import {ClientContext} from "../../../../state-managemnt/client"
+
 interface Addresses {
   id: string;
   name: string;
@@ -41,14 +40,14 @@ const ModalAddresses: React.FC<ModalAddressesProps> = ({
   const choseAddress = () => {
     closeAddressesModal()
     const findObject = addresses.find((address) => address.id === addressId)
-    console.log(findObject, 'findObject');
+    // document.cookie = `sessionData=${JSON.stringify(findObject.id)}; path=/`;
     
     setAddressInfo(findObject)
   }
   // close modal and handle data function 
 
 
-  console.log(addresses, 'addresses');
+
   
   return (
     <>
@@ -68,7 +67,7 @@ const ModalAddresses: React.FC<ModalAddressesProps> = ({
           </div>
 
           <div className="border-t-[1px] border-[#E0E0E0]">
-            {addresses.map((address) => {
+            {addresses?.map((address) => {
               return (
                 <>
                   <div
@@ -76,7 +75,7 @@ const ModalAddresses: React.FC<ModalAddressesProps> = ({
                     className="flex flex-row-reverse m-8 gap-4 "
                   >
                     <input
-                      checked={addressId === address.id}
+                      // checked={addressId === address.id}
                       onChange={() => addressHandler(address)}
                       type="checkbox"
                       className="bg-white w-[30px] h-[30px] border-2 border-[#c2c2c2] text-[#FFC453] focus:ring-0 rounded-[50%] "

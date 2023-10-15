@@ -1,10 +1,6 @@
 "use client";
 
-import { useMutation, useQuery } from "@tanstack/react-query";
-
-import axios from "axios";
-
-import { useCallback, useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 
 import ModalAddresses from "./modal-addresses/modalAddresses";
 
@@ -13,12 +9,16 @@ import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 
 import * as Yup from "yup";
-import { Input, notification } from "antd";
 
 import { isIranianNationalIdValid } from "@/components/functions/functions";
 
-import { getAddressesService } from "../../../service/bimeBazar";
 import { ClientContext } from "@/state-managemnt/client";
+
+import { getAddressesService, sendClientData } from "@/app/api/service";
+
+import {  useRouter } from "next/navigation";
+
+import { deleteCookie, getCookie, setCookie } from "cookies-next";
 
 interface Addresses {
   id: string;
@@ -33,57 +33,26 @@ interface ChosenAddress {
 }
 
 const ClientsInfo = () => {
+  const router = useRouter();
+
   const [nationalId, setNationalId] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
+
   const { addressInfo } = useContext(ClientContext);
 
   // functions related to open and close modal
   const [openModal, setOpenModal] = useState(false);
 
+
   const showAddressesModal = () => {
     setOpenModal(true);
-    getAddressesService();
+    getAddresses();
   };
 
   const closeAddressesModal = () => {
     setOpenModal(false);
   };
 
-  // functions related to open and close modal
-
-  // handle fetch data for showing addresses in modal component
-  // const [fetchOnce, setFetchOnce] = useState(true)
-  //   useEffect(() => {
-  //     if(fetchOnce) {
-  //       getAddressesService();
-  //       setFetchOnce(false)
-  //     }
-  //   }, []);
-
-  const [data, setData] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
-
-  async function getAddressesService() {
-    setIsLoading(true);
-    try {
-      const response = await axios.get(
-        "https://front-end-task.bmbzr.ir/my-addresses/"
-      );
-      if (response.status === 200) {
-        console.log(response);
-        
-        setData(response.data);
-        setIsLoading(false);
-      }
-    } catch (e) {
-      return {
-        message: e,
-      };
-    }
-  }
-  // handle fetch data for showing addresses in modal component
-
-  
   // inputs data handler
   const nationalIdHandler = (nationalId: string) => {
     setNationalId(nationalId);
@@ -117,30 +86,59 @@ const ClientsInfo = () => {
   const { errors } = formState;
   // section related to inputs validation
 
+  // functions related to open and close modal
+  const [data, setData] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+
+  async function getAddresses() {
+    setIsLoading(true);
+
+    const response = await getAddressesService();
+
+    if (response) {
+      setData(response);
+      setIsLoading(false);
+    } else {
+    }
+  }
+  // handle fetch data for showing addresses in modal component
+
+  // const [addressCookie, setAddressCookie] = useState(false);
+
   // send chesen address data to back
   const handleFormSubmit = async () => {
-    const formData = {
+    const formData: ChosenAddress = {
       nationalId: nationalId,
       phoneNumber: phoneNumber,
       addressId: addressInfo?.id,
     };
 
-    try {
-      const response = await axios.post(
-        "https://front-end-task.bmbzr.ir/order/completion/",
-        formData
-      );
-      console.log(response);
-    } catch (error) {
-      console.log(error);
-
-      throw new Error("Failed to post data");
+    const response = await sendClientData(formData);
+    console.log(response, "client");
+    if (response?.status === 200) {
+      router.push("/success-submission");
+      setCookie("addresses", formData);
+      setCookie("status", 200);
     }
   };
   // send chesen address data to back
 
-  if (isLoading) return <div> ...در حال دریافت اطلاعات </div>;
 
+  // add natational id and phone number when user register successfully and came back to first page
+  useEffect(() => {
+    if (getCookie('status') === "200") {
+      const cookieValue: any = getCookie("addresses");
+      const addressesObject = JSON?.parse(cookieValue);
+      setNationalId(addressesObject.nationalId);
+      setPhoneNumber(addressesObject.phoneNumber);
+    }
+    return deleteCookie('status')
+  }, []);
+  // add natational id and phone number when user register successfully and came back to first page
+
+  
+
+  if (isLoading) return <div> ...در حال دریافت اطلاعات </div>;
   return (
     <>
       <form onSubmit={handleSubmit(handleFormSubmit)}>
@@ -199,6 +197,7 @@ const ClientsInfo = () => {
               : `لطفا آدرسی را که می‌خواهید روی بیمه‌نامه درج شود، وارد کنید `}
           </h1>
         </div>
+
         <div className=" px-4 ">
           <button
             onClick={showAddressesModal}
