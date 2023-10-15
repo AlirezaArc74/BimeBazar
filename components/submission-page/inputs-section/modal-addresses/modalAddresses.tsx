@@ -30,7 +30,6 @@ const ModalAddresses: React.FC<ModalAddressesProps> = ({
   const {setAddressInfo} = useContext(ClientContext)
 
   const addressHandler = (address:Addresses) => {
-    // console.log(address.id);
     
     setAddressId(address.id);
   };
@@ -39,9 +38,7 @@ const ModalAddresses: React.FC<ModalAddressesProps> = ({
   // close modal and handle data function 
   const choseAddress = () => {
     closeAddressesModal()
-    const findObject = addresses.find((address) => address.id === addressId)
-    // document.cookie = `sessionData=${JSON.stringify(findObject.id)}; path=/`;
-    
+    const findObject = addresses.find((address) => address.id === addressId)    
     setAddressInfo(findObject)
   }
   // close modal and handle data function 

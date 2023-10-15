@@ -114,7 +114,6 @@ const ClientsInfo = () => {
     };
 
     const response = await sendClientData(formData);
-    console.log(response, "client");
     if (response?.status === 200) {
       router.push("/success-submission");
       setCookie("addresses", formData);
