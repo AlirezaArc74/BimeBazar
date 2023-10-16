@@ -1,6 +1,8 @@
+
 import ClientsInfo from "@/components/submission-page/inputs-section/clientInfo";
-import Head from "next/head";
-import { useRouter } from "next/navigation";
+
+
+
 
 const Submission = () => {
   return (

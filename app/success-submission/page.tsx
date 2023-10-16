@@ -4,8 +4,6 @@ import { getCookie } from "cookies-next";
 import {  useRouter } from "next/navigation";
 import { useEffect } from "react";
 
-
-
 const SuccessSubmission = () => {
   const router = useRouter();
   
